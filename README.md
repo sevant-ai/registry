@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sevant Registry Docker Setup
 
 This repository contains the Docker configuration for the Sevant Registry application, including both frontend and backend services.
@@ -62,3 +63,9 @@ The services are connected through a bridge network named `app-network`.
 ## DNS Configuration
 
 The services use Google's DNS servers (8.8.8.8 and 8.8.4.4) for reliable DNS resolution. 
+=======
+# Sevant Service Registry
+Sevant service registry dynamically depicts endpoints and their associated API's. (Domain Driven Context Language) provides a new language construct, by using a simple dot notation DDCL allows relationships to be formed between products, solutions and capabilities.
+
+[DDCL] (https://analyticsavant.medium.com/domain-driven-context-language-899b099cd8d6)
+>>>>>>> 83276a5530430cf9b11ebc4ddc1e6df42d9c5851
