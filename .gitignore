@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dependencies
 node_modules/
 .pnp/
@@ -27,11 +28,27 @@ yarn-debug.log*
 yarn-error.log*
 
 # IDE
+=======
+# Environment variables
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+>>>>>>> 0047d44f117ea3c2d3b81e7ea39d7ba4afd2f1e0
 .idea/
 .vscode/
 *.swp
 *.swo
 
+<<<<<<< HEAD
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+=======
+# Logs
+*.log 
+>>>>>>> 0047d44f117ea3c2d3b81e7ea39d7ba4afd2f1e0
