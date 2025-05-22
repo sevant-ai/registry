@@ -1,9 +1,14 @@
+version: '3.8'
+
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: analyticsavant/sevant-registry-backend:latest
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    image: sevant-registry-backend:latest
     ports:
       - "3001:3001"
     environment:
@@ -11,11 +16,13 @@ services:
       - MONGODB_URI=${MONGODB_URI}
       - SWAGGER_API_BASE_URL=${SWAGGER_API_BASE_URL}
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - EMAIL_FROM=${EMAIL_FROM}
       - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - FORGET_PASSWORD_BASE_URL_SERVER=${FORGET_PASSWORD_BASE_URL_SERVER}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3001/api/health || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -30,18 +37,20 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: analyticsavant/sevant-registry-frontend:latest
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    image: sevant-registry-frontend:latest
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=http://localhost:3001
-      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
     depends_on:
       backend:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
