@@ -1,36 +1,21 @@
-<<<<<<< HEAD
 services:
   backend:
     build:
       context: ./backend
-      dockerfile: ../sevant-registry-docker/backend/Dockerfile
-=======
-version: '3.8'
-
-services:
-  backend:
->>>>>>> 0047d44f117ea3c2d3b81e7ea39d7ba4afd2f1e0
+      dockerfile: Dockerfile
     image: analyticsavant/sevant-registry-backend:latest
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=production
       - MONGODB_URI=${MONGODB_URI}
-      - EMAIL_ID=${EMAIL_ID}
-      - EMAIL_PASS=${EMAIL_PASS}
       - SWAGGER_API_BASE_URL=${SWAGGER_API_BASE_URL}
-<<<<<<< HEAD
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - EMAIL_FROM=${EMAIL_FROM}
       - JWT_SECRET=${JWT_SECRET}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/health"]
-=======
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api"]
->>>>>>> 0047d44f117ea3c2d3b81e7ea39d7ba4afd2f1e0
+      test: ["CMD-SHELL", "curl -f http://localhost:3001/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -42,27 +27,21 @@ services:
       - 8.8.4.4
 
   frontend:
-<<<<<<< HEAD
     build:
       context: ./frontend
-      dockerfile: ../sevant-registry-docker/frontend/Dockerfile
-=======
->>>>>>> 0047d44f117ea3c2d3b81e7ea39d7ba4afd2f1e0
+      dockerfile: Dockerfile
     image: analyticsavant/sevant-registry-frontend:latest
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=http://localhost:3001
-<<<<<<< HEAD
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
-=======
->>>>>>> 0047d44f117ea3c2d3b81e7ea39d7ba4afd2f1e0
     depends_on:
       backend:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
