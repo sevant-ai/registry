@@ -34,9 +34,9 @@ FORGET_PASSWORD_BASE_URL_SERVER=your_password_reset_url_here
 
 2. Create the `.env` file with your configuration
 
-3. Build and start the containers:
+3. Start the containers:
    ```bash
-   docker-compose up --build
+   docker-compose up -d
    ```
 
 The services will be available at:
