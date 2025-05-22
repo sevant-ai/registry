@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --ignore-scripts
 
 # Copy source code
 COPY . .
@@ -27,18 +27,18 @@ RUN apk add --no-cache curl
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm install --only=production && \
+RUN npm install --only=production --ignore-scripts && \
     npm cache clean --force
 
-# Copy built application from builder stage
+# Copy built application
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 
-# Expose the port Next.js will run on
+# Expose port
 EXPOSE 3000
 
-# Start the Next.js app
+# Start the application
 CMD ["npm", "start"]
 
 # Add this line to update system packages

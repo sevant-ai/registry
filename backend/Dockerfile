@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps --ignore-scripts
 
 # Copy source code
 COPY . .
@@ -27,13 +27,13 @@ RUN apk add --no-cache curl
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm install --only=production --legacy-peer-deps && \
+RUN npm install --only=production --legacy-peer-deps --ignore-scripts && \
     npm cache clean --force
 
-# Copy built application from builder stage
+# Copy built application
 COPY --from=builder /app/dist ./dist
 
-# Expose the port the app runs on
+# Expose port
 EXPOSE 3001
 
 # Start the application
