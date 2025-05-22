@@ -29,7 +29,7 @@ FORGET_PASSWORD_BASE_URL_SERVER=your_password_reset_url_here
 1. Clone this repository:
    ```bash
    git clone <repository-url>
-   cd sevant-registry-docker
+   cd registry
    ```
 
 2. Create the `.env` file with your configuration
