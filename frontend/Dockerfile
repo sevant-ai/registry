@@ -1,21 +1,39 @@
-# Use official Node.js LTS image
-FROM node:20-alpine
+# Build stage
+FROM --platform=$BUILDPLATFORM node:20-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock) first for better caching
-COPY package.json ./
-# If you use npm:
-RUN npm install
-# If you use yarn, replace above with:
-# RUN yarn install
+# Copy package files
+COPY package*.json ./
 
-# Copy the rest of your application code
+# Install dependencies
+RUN npm install
+
+# Copy source code
 COPY . .
 
 # Build the Next.js app
 RUN NEXTJS_IGNORE_ESLINT=1 npm run build
+
+# Production stage
+FROM --platform=$TARGETPLATFORM node:20-alpine
+
+WORKDIR /app
+
+# Install curl for health checks
+RUN apk add --no-cache curl
+
+# Copy package files
+COPY package*.json ./
+
+# Install production dependencies only
+RUN npm install --only=production && \
+    npm cache clean --force
+
+# Copy built application from builder stage
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
 
 # Expose the port Next.js will run on
 EXPOSE 3000
