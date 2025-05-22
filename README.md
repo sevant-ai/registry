@@ -15,9 +15,13 @@ Create a `.env` file in the root directory with the following variables:
 
 ```env
 MONGODB_URI=your_mongodb_connection_string
-EMAIL_ID=your_email_id
-EMAIL_PASS=your_email_password
 SWAGGER_API_BASE_URL=your_swagger_api_base_url
+SENDGRID_API_KEY=(Starts with SG)
+JWT_SECRET=secretKey
+JWT_EXPIRATION=24h
+EMAIL_FROM=(Email)
+SWAGGER_API_BASE_URL=https://api.swaggerhub.com/
+FORGET_PASSWORD_BASE_URL_SERVER=your_password_reset_url_here
 ```
 
 ## Getting Started
