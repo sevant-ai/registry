@@ -8,12 +8,12 @@ services:
     environment:
       - NODE_ENV=production
       - MONGODB_URI=${MONGODB_URI}
-      - SWAGGER_API_BASE_URL=${SWAGGER_API_BASE_URL}
+      - SWAGGER_API_BASE_URL=http://localhost:3001
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - JWT_EXPIRATION=24h
       - EMAIL_FROM=${EMAIL_FROM}
-      - FORGET_PASSWORD_BASE_URL_SERVER=${FORGET_PASSWORD_BASE_URL_SERVER}
+      - FORGET_PASSWORD_BASE_URL_SERVER=http://localhost:3001
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
