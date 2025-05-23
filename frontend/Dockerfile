@@ -1,45 +1,43 @@
 # Build stage
-FROM --platform=$BUILDPLATFORM node:20-alpine AS builder
+FROM node:20-alpine AS builder
 
+# Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --ignore-scripts
+RUN npm ci
 
-# Copy source code
+# Copy the rest of your application code
 COPY . .
 
 # Build the Next.js app
 RUN NEXTJS_IGNORE_ESLINT=1 npm run build
 
 # Production stage
-FROM --platform=$TARGETPLATFORM node:20-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Install curl for health checks
-RUN apk add --no-cache curl
+# Install wget for health checks
+RUN apk add --no-cache wget
 
 # Copy package files
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm install --only=production --ignore-scripts && \
-    npm cache clean --force
+RUN npm ci --only=production
 
-# Copy built application
+# Copy built application from builder stage
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 
-# Expose port
+# Expose the port Next.js will run on
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]
+# Start the Next.js app
+CMD ["npm", "start"] 
 
-# Add this line to update system packages
-RUN apk update && apk upgrade 
