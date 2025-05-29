@@ -8,6 +8,8 @@ This repository contains the Docker configuration for the Sevant Registry applic
 - Docker
 - Docker Compose
 - Git
+- Sendgrid (API Key) **Required for Email Notification
+- SwaggerHub Account (API Key) **Required for SwaggerHub Integration
 
 ## Environment Variables
 
@@ -15,13 +17,12 @@ Create a `.env` file in the root directory with the following variables:
 
 ```env
 MONGODB_URI=your_mongodb_connection_string
-SWAGGER_API_BASE_URL=your_swagger_api_base_url
 SENDGRID_API_KEY=(Starts with SG)
 JWT_SECRET=secretKey
 JWT_EXPIRATION=24h
-EMAIL_FROM=(Email)
+EMAIL_FROM=youremail@somewhere.com
 SWAGGER_API_BASE_URL=https://api.swaggerhub.com/
-FORGET_PASSWORD_BASE_URL_SERVER=your_password_reset_url_here
+FORGET_PASSWORD_BASE_URL_SERVER=http://localhost:3000/
 ```
 
 ## Getting Started
