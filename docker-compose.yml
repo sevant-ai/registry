@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: ./backend
-      dockerfile: ../sevant-registry-docker/backend/Dockerfile
+      context: ../backend
+      dockerfile: Dockerfile
     image: analyticsavant/sevant-registry-backend:latest
     ports:
       - "3001:3001"
@@ -13,6 +13,7 @@ services:
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - EMAIL_FROM=${EMAIL_FROM}
       - JWT_SECRET=${JWT_SECRET}
+      - FORGET_PASSWORD_BASE_URL_SERVER=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}/
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/health"]
@@ -28,8 +29,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: ../sevant-registry-docker/frontend/Dockerfile
+      context: ../frontend
+      dockerfile: Dockerfile
     image: analyticsavant/sevant-registry-frontend:latest
     ports:
       - "3000:3000"
