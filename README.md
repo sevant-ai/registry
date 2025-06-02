@@ -10,7 +10,6 @@ This repository contains the Docker configuration for the Sevant Registry applic
 - Git
 - Sendgrid (API Key) **Required for Email Notification
 - SwaggerHub Account (API Key) **Required for SwaggerHub Integration
-- n8n (Running Locally or in a container)
 - Anthropic API Key (For n8n Integration)
 
 ## Environment Variables
