@@ -27,7 +27,6 @@ SWAGGER_API_BASE_URL=https://api.swaggerhub.com/
 FORGET_PASSWORD_BASE_URL_SERVER=http://localhost:3000/
 ANTHROPIC_API_KEY=(Anthropic API Key)
 N8N_URL=http://localhost:5678
-N8N_API_KEY=(n8n API Key)
 
 ```
 
@@ -49,6 +48,7 @@ N8N_API_KEY=(n8n API Key)
 The services will be available at:
 - Frontend: http://localhost:3000
 - Backend: http://localhost:3001
+- n8n: http://localhost:5678
 
 ## Services
 
