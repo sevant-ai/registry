@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: ../backend
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: ../sevant-registry-docker/backend/Dockerfile
     image: analyticsavant/sevant-registry-backend:latest
     ports:
       - "3001:3001"
@@ -13,6 +13,9 @@ services:
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - EMAIL_FROM=${EMAIL_FROM}
       - JWT_SECRET=${JWT_SECRET}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - N8N_URL=http://n8n:5678
+      - N8N_API_KEY=${N8N_API_KEY}
       - FORGET_PASSWORD_BASE_URL_SERVER=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}/
     restart: unless-stopped
     healthcheck:
@@ -26,11 +29,13 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
+    depends_on:
+      - n8n
 
   frontend:
     build:
-      context: ../frontend
-      dockerfile: Dockerfile
+      context: ./frontend
+      dockerfile: ../sevant-registry-docker/frontend/Dockerfile
     image: analyticsavant/sevant-registry-frontend:latest
     ports:
       - "3000:3000"
@@ -38,6 +43,7 @@ services:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=http://localhost:3001
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_N8N_URL=http://localhost:5678
     depends_on:
       backend:
         condition: service_healthy
@@ -53,8 +59,51 @@ services:
       - 8.8.8.8
       - 8.8.4.4
 
+  n8n:
+    image: n8nio/n8n
+    command: start
+    ports:
+      - "5678:5678"
+    environment:
+      - DEBUG=*
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=${N8N_PROTOCOL:-http}
+      - NODE_ENV=production
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678/}
+      - GENERIC_TIMEZONE=${N8N_GENERIC_TIMEZONE:-UTC}
+      - N8N_USER_MANAGEMENT_DISABLED=true
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:-password}
+      - N8N_DIAGNOSTICS_ENABLED=true
+      - N8N_DIAGNOSTICS_CONFIG_ENABLED=true
+      - N8N_DIAGNOSTICS_MODE=debug
+      - N8N_DB_TYPE=sqlite
+      - N8N_DB_SQLITE_VACUUM_ON_STARTUP=true
+      - N8N_DB_SQLITE_EXECUTION_MODE=regular
+      - N8N_DB_SQLITE_DISABLE_WAL=true
+      - N8N_LOG_LEVEL=debug
+      - N8N_LOG_OUTPUT=console
+      - N8N_DISABLE_PRODUCTION_MAIN_PROCESS=false
+      - N8N_DISABLE_WEBHOOK_DEREGISTRATION_SHUTDOWN=true
+      - N8N_DISABLE_WORKFLOW_LOCKING=false
+      - N8N_DISABLE_WORKFLOW_SAVE_ON_EXECUTION=false
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
 networks:
   app-network:
-    driver: bridge 
+    driver: bridge
 
-
+volumes:
+  n8n_data:
